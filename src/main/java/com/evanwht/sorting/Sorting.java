@@ -110,4 +110,61 @@ public class Sorting {
 			}
 		}
 	}
+
+	/**
+	 * Performs a merge sort on the given array.
+	 * </p>
+	 * Algorithm: Recursively break apart current working array into 2 sub arrays until you get an array of size 1.
+	 * While returning through the recursion tree, merge 2 broken up arrays into one sorted array.
+	 * </p>
+	 * Notes:
+	 * 	- Divide and Conquer
+	 * 	- Best algorithm for time complexity
+	 * 	- Creates garbage when working with arrays, LinkedLists can be modified in place eliminating the need for
+	 * 		creating garbage.
+	 * 	- Best:		O(n log(n))
+	 * 	- Avg:		O(n log(n))
+	 * 	- Worst:	O(n log(n))
+	 * 	</p>
+	 * Best performance for LinkedLists
+	 *
+	 * TODO this creates lots of garbage. Clean up to reduce copying
+	 * @param array array to sort
+	 * @return sorted array
+	 */
+	public static int[] mergeSort(final int[] array) {
+		return mergeSort(array, 0, array.length);
+	}
+
+	private static int[] mergeSort(final int[] array, int start, int end) {
+		// if we are still working on a section of array larger than 2, break apart and recurse
+		final int size = end - start;
+		if (size > 1) {
+			final int[] left = mergeSort(array, start, start + (size/2));
+			final int[] right = mergeSort(array, start + (size/2), end);
+			return merge(left, right);
+		}
+		// create copy of smallest length array to pass back up
+		final int[] ret = new int[size];
+		System.arraycopy(array, start, ret, 0, size);
+		return ret;
+	}
+
+	// visible for testing
+	static int[] merge(final int[] left, final int[] right) {
+		final int[] merged = new int[left.length + right.length];
+		int l = 0, r = 0;
+		for (int i = 0; i < merged.length; i++) {
+			if (l > left.length - 1) {
+				merged[i] = right[r++];
+			} else if (r > right.length - 1) {
+				merged[i] = left[l++];
+			} else if (left[l] <= right[r]) {
+				merged[i] = left[l++];
+			} else {
+				merged[i] = right[r++];
+			}
+		}
+		return merged;
+	}
 }
