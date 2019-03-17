@@ -1,13 +1,13 @@
 package com.evanwht.sorting;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertArrayEquals;
 
-class SortingTest {
+public class SortingTest {
 
 	@Test
-	void selectionSort() {
+	public void selectionSort() {
 		final int[] array = new int[] {4, 1, 8, 3, 2};
 		Sorting.selectionSort(array);
 		assertArrayEquals(new int[] {1, 2, 3, 4, 8}, array);
