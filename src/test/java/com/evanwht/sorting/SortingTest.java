@@ -52,4 +52,32 @@ public class SortingTest {
 		sorted = Sorting.mergeSort(new int[] {4});
 		assertArrayEquals(new int[] {4}, sorted);
 	}
+
+	@Test
+	public void quickSortEnd() {
+		final int[] end = new int[] {4, 1, 8, 3, 2};
+		Sorting.quickSort(end, Sorting.PivotStrategy.END);
+		assertArrayEquals(new int[] {1, 2, 3, 4, 8}, end);
+	}
+
+	@Test
+	public void quickSortStart() {
+		final int[] start = new int[] {4, 1, 8, 3, 2};
+		Sorting.quickSort(start, Sorting.PivotStrategy.START);
+		assertArrayEquals(new int[] {1, 2, 3, 4, 8}, start);
+	}
+
+	@Test
+	public void quickSortMid() {
+		final int[] mid = new int[] {4, 1, 8, 3, 2};
+		Sorting.quickSort(mid, Sorting.PivotStrategy.MID);
+		assertArrayEquals(new int[] {1, 2, 3, 4, 8}, mid);
+	}
+
+	@Test
+	public void quickSortRand() {
+		final int[] rand = new int[] {4, 1, 8, 3, 2};
+		Sorting.quickSort(rand, Sorting.PivotStrategy.RANDOM);
+		assertArrayEquals(new int[] {1, 2, 3, 4, 8}, rand);
+	}
 }

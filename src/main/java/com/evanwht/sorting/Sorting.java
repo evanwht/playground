@@ -1,9 +1,7 @@
 package com.evanwht.sorting;
 
-import java.util.Arrays;
-
 /**
- * Utility class of Searching algorithms.
+ * Utility class of Sorting algorithms.
  *
  * @author evanwht1@gmail.com
  */
@@ -166,5 +164,75 @@ public class Sorting {
 			}
 		}
 		return merged;
+	}
+
+	/**
+	 * Performs a quick sort on the given array, modifying it.
+	 * </p>
+	 * Algorithm: Pick a pivot point, move all values larger than the pivot to the right (until end of array). Put the pivot value to the left of the lowest
+	 * value that is still greater than the pivot (basically just put it in place). Recursively call quick sort on the left and right side of where pivot ends.
+	 * </p>
+	 * Notes:
+	 * 	- Divide and Conquer
+	 * 	- Works in place and has best best/avg case time
+	 * 	- Best:		O(n log(n))
+	 * 	- Avg:		O(n log(n))
+	 * 	- Worst:	O(n^2)
+	 * 	</p>
+	 * Best performance for arrays (space considering)
+	 *
+	 * @param array array to sort (will modify)
+	 */
+	public static void quickSort(final int[] array, final PivotStrategy pivotStrategy) {
+		quickSort(array, 0, array.length, pivotStrategy);
+	}
+
+	public static void quickSort(final int[] array) {
+		quickSort(array, 0, array.length, PivotStrategy.END);
+	}
+
+	private static void quickSort(final int[] array, final int start, final int end, final PivotStrategy pivotStrategy) {
+		final int pivot = pivotStrategy.pick(start, end);
+		int j = start;
+		for (int i = start; i < end; i++) {
+			if (i != pivot) {
+				if (array[i] < array[pivot]) {
+					if (j != pivot) {
+						swap(array, i, j);
+					}
+					j++;
+				}
+			}
+		}
+		swap(array, pivot, j);
+		if ((j - start) > 1){
+			quickSort(array, start, j, pivotStrategy);
+		}
+		if ((end - ++j) > 1) {
+			quickSort(array, j, end, pivotStrategy);
+		}
+	}
+
+	public interface PivotStrategy {
+
+		PivotStrategy END = (s, e) -> e - 1;
+		PivotStrategy START = (s, e) -> s;
+		PivotStrategy MID = (s, e) -> ((s + e) / 2);
+		PivotStrategy RANDOM = (s, e) -> s + (int) (Math.random() * (e-s));
+
+		/**
+		 * picks a pivot point between start and end inclusively. Possible formulas are: random, last, first, half.
+		 *
+		 * @param start starting index to consider
+		 * @param end ending index to consider
+		 * @return index of pivot point to use for quick sort
+		 */
+		int pick(int start, int end);
+	}
+
+	private static void swap(final int[] array, final int i, final int j) {
+		final int swap = array[i];
+		array[i] = array[j];
+		array[j] = swap;
 	}
 }
