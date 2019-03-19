@@ -80,4 +80,11 @@ public class SortingTest {
 		Sorting.quickSort(rand, Sorting.PivotStrategy.RANDOM);
 		assertArrayEquals(new int[] {1, 2, 3, 4, 8}, rand);
 	}
+
+	@Test
+	public void minHeapSort() {
+		final int[] array = new int[] {4, 7, 8, 3, 2, 14, 9, 1, 12};
+		Sorting.minHeapSort(array);
+		assertArrayEquals(new int[] {1, 2, 3, 4, 7, 8, 9, 12, 14}, array);
+	}
 }

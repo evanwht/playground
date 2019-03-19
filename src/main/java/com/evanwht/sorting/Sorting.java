@@ -1,5 +1,7 @@
 package com.evanwht.sorting;
 
+import com.evanwht.structures.tree.MaxHeap;
+
 /**
  * Utility class of Sorting algorithms.
  *
@@ -11,7 +13,7 @@ public class Sorting {
 	private Sorting() {}
 
 	/**
-	 * Performs a selection sort on the given array, modifying it.
+	 * Performs a selection maxSort on the given array, modifying it.
 	 * </p>
 	 * Algorithm: Traverses the array to find the smallest value to the right of the current index then swaps that
 	 * value with the one at the current index. This is done for each index of the array.
@@ -24,7 +26,7 @@ public class Sorting {
 	 * Possibly the slowest sorting algorithm.
 	 *
 	 * TODO short circuit if array is in order
-	 * @param array array to sort (will modify the given array)
+	 * @param array array to maxSort (will modify the given array)
 	 */
 	public static void selectionSort(final int[] array) {
 		if (array != null) {
@@ -46,7 +48,7 @@ public class Sorting {
 	}
 
 	/**
-	 * Performs a bubble sort on the given array, modifying it.
+	 * Performs a bubble maxSort on the given array, modifying it.
 	 * </p>
 	 * Algorithm: starting at the second index, traverse the array swapping the previous value with the current one if
 	 * the previous one is bigger than the current value. Repeat, starting at the same index but traversing until one
@@ -61,7 +63,7 @@ public class Sorting {
 	 * Not as bad as selection but still very slow algorithm
 	 *
 	 * TODO short circuit if array is in order
-	 * @param array array to sort (will modify the given array)
+	 * @param array array to maxSort (will modify the given array)
 	 */
 	public static void bubbleSort(final int[] array) {
 		if (array != null) {
@@ -80,7 +82,7 @@ public class Sorting {
 	}
 
 	/**
-	 * Performs an insertion sort on the given array, modifying it.
+	 * Performs an insertion maxSort on the given array, modifying it.
 	 * </p>
 	 * Algorithm: starting at the second index, walk backwards, shifting all larger values than the current value to the
 	 * right, until you find a value smaller than the current value. Repeat starting at the next index.
@@ -93,7 +95,7 @@ public class Sorting {
 	 * 	</p>
 	 * Comparable performance to bubble
 	 *
-	 * @param array array to sort (will modify the given array)
+	 * @param array array to maxSort (will modify the given array)
 	 */
 	public static void insertionSort(final int[] array) {
 		if (array != null) {
@@ -110,7 +112,7 @@ public class Sorting {
 	}
 
 	/**
-	 * Performs a merge sort on the given array.
+	 * Performs a merge maxSort on the given array.
 	 * </p>
 	 * Algorithm: Recursively break apart current working array into 2 sub arrays until you get an array of size 1.
 	 * While returning through the recursion tree, merge 2 broken up arrays into one sorted array.
@@ -127,7 +129,7 @@ public class Sorting {
 	 * Best performance for LinkedLists
 	 *
 	 * TODO this creates lots of garbage. Clean up to reduce copying
-	 * @param array array to sort
+	 * @param array array to maxSort
 	 * @return sorted array
 	 */
 	public static int[] mergeSort(final int[] array) {
@@ -167,10 +169,11 @@ public class Sorting {
 	}
 
 	/**
-	 * Performs a quick sort on the given array, modifying it.
+	 * Performs a quick maxSort on the given array, modifying it.
 	 * </p>
-	 * Algorithm: Pick a pivot point, move all values larger than the pivot to the right (until end of array). Put the pivot value to the left of the lowest
-	 * value that is still greater than the pivot (basically just put it in place). Recursively call quick sort on the left and right side of where pivot ends.
+	 * Algorithm: Pick a pivot point, move all values larger than the pivot to the right (until end of array). Put the
+	 * pivot value to the left of the lowest value that is still greater than the pivot (basically just put it in place).
+	 * Recursively call quick maxSort on the left and right side of where pivot ends.
 	 * </p>
 	 * Notes:
 	 * 	- Divide and Conquer
@@ -181,18 +184,15 @@ public class Sorting {
 	 * 	</p>
 	 * Best performance for arrays (space considering)
 	 *
-	 * @param array array to sort (will modify)
+	 * @param array array to maxSort (will modify)
+	 * @param pivotStrategy strategy to use to pick what index will be used as the pivot point
 	 */
 	public static void quickSort(final int[] array, final PivotStrategy pivotStrategy) {
 		quickSort(array, 0, array.length, pivotStrategy);
 	}
 
-	public static void quickSort(final int[] array) {
-		quickSort(array, 0, array.length, PivotStrategy.END);
-	}
-
-	private static void quickSort(final int[] array, final int start, final int end, final PivotStrategy pivotStrategy) {
-		final int pivot = pivotStrategy.pick(start, end);
+	private static void quickSort(final int[] array, final int start, final int end, final PivotStrategy strategy) {
+		final int pivot = strategy.pick(start, end);
 		int j = start;
 		for (int i = start; i < end; i++) {
 			if (i != pivot) {
@@ -206,10 +206,10 @@ public class Sorting {
 		}
 		swap(array, pivot, j);
 		if ((j - start) > 1){
-			quickSort(array, start, j, pivotStrategy);
+			quickSort(array, start, j, strategy);
 		}
 		if ((end - ++j) > 1) {
-			quickSort(array, j, end, pivotStrategy);
+			quickSort(array, j, end, strategy);
 		}
 	}
 
@@ -225,7 +225,7 @@ public class Sorting {
 		 *
 		 * @param start starting index to consider
 		 * @param end ending index to consider
-		 * @return index of pivot point to use for quick sort
+		 * @return index of pivot point to use for quick maxSort
 		 */
 		int pick(int start, int end);
 	}
@@ -234,5 +234,28 @@ public class Sorting {
 		final int swap = array[i];
 		array[i] = array[j];
 		array[j] = swap;
+	}
+
+	/**
+	 * Performs a heap maxSort on the given array, modifying it.
+	 * </p>
+	 * Algorithm:
+	 * </p>
+	 * Notes:
+	 * 	- Divide and Conquer
+	 * 	- Works in place and has best best/avg case time
+	 * 	- Best:		O(n log(n))
+	 * 	- Avg:		O(n log(n))
+	 * 	- Worst:	O(n^2)
+	 * 	</p>
+	 * Best performance for arrays (space considering)
+	 *
+	 * @param array array to maxSort (will modify)
+	 */
+	public static void minHeapSort(final int[] array) {
+		for (int i = 0; i < array.length; i++) {
+			final MaxHeap unsorted = new MaxHeap(array, i);
+			unsorted.minSort();
+		}
 	}
 }
