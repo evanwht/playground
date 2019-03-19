@@ -1,5 +1,7 @@
 package com.evanwht.sorting;
 
+import com.evanwht.structures.tree.Heap;
+
 /**
  * Utility class of Sorting algorithms.
  *
@@ -169,8 +171,9 @@ public class Sorting {
 	/**
 	 * Performs a quick sort on the given array, modifying it.
 	 * </p>
-	 * Algorithm: Pick a pivot point, move all values larger than the pivot to the right (until end of array). Put the pivot value to the left of the lowest
-	 * value that is still greater than the pivot (basically just put it in place). Recursively call quick sort on the left and right side of where pivot ends.
+	 * Algorithm: Pick a pivot point, move all values larger than the pivot to the right (until end of array). Put the
+	 * pivot value to the left of the lowest value that is still greater than the pivot (basically just put it in place).
+	 * Recursively call quick sort on the left and right side of where pivot ends.
 	 * </p>
 	 * Notes:
 	 * 	- Divide and Conquer
@@ -182,17 +185,14 @@ public class Sorting {
 	 * Best performance for arrays (space considering)
 	 *
 	 * @param array array to sort (will modify)
+	 * @param pivotStrategy strategy to use to pick what index will be used as the pivot point
 	 */
 	public static void quickSort(final int[] array, final PivotStrategy pivotStrategy) {
 		quickSort(array, 0, array.length, pivotStrategy);
 	}
 
-	public static void quickSort(final int[] array) {
-		quickSort(array, 0, array.length, PivotStrategy.END);
-	}
-
-	private static void quickSort(final int[] array, final int start, final int end, final PivotStrategy pivotStrategy) {
-		final int pivot = pivotStrategy.pick(start, end);
+	private static void quickSort(final int[] array, final int start, final int end, final PivotStrategy strategy) {
+		final int pivot = strategy.pick(start, end);
 		int j = start;
 		for (int i = start; i < end; i++) {
 			if (i != pivot) {
@@ -206,10 +206,10 @@ public class Sorting {
 		}
 		swap(array, pivot, j);
 		if ((j - start) > 1){
-			quickSort(array, start, j, pivotStrategy);
+			quickSort(array, start, j, strategy);
 		}
 		if ((end - ++j) > 1) {
-			quickSort(array, j, end, pivotStrategy);
+			quickSort(array, j, end, strategy);
 		}
 	}
 
@@ -234,5 +234,29 @@ public class Sorting {
 		final int swap = array[i];
 		array[i] = array[j];
 		array[j] = swap;
+	}
+
+	/**
+	 * Performs a heap sort on the given array, modifying it.
+	 * </p>
+	 * Algorithm: Create an unsorted heap from the array. Starting at the root node, recurse down the tree. On the way
+	 * back up the tree, swap any node with one of its children if the child is lesser than the current node. If we swap,
+	 * call sort on the this node again to make sure it is still in a valid position.
+	 * </p>
+	 * Notes:
+	 * 	- Builds a heap but doesn't create extra array (O(n) space)
+	 * 	TODO could reduce amount of creation if we don't create Node object and just work off index
+	 * 	- Best:		O(n log(n))
+	 * 	- Avg:		O(n log(n))
+	 * 	- Worst:	O(n log(n))
+	 * 	</p>
+	 *
+	 * @param array array to sort (will modify)
+	 */
+	public static void minHeapSort(final int[] array) {
+		for (int i = 0; i < array.length; i++) {
+			final Heap unsorted = new Heap(array, i);
+			unsorted.minSort();
+		}
 	}
 }
